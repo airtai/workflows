@@ -39,6 +39,7 @@ runs:
           sudo dpkg -i quarto*.deb
         else
           pip install -Uq nbdev
+          nbdev_install_quarto
         fi
         echo ${{ github.repository_owner }}
         if [[ ${{ github.repository_owner }} != "airtai" ]]; then
