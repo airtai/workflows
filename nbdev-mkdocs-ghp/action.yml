@@ -46,7 +46,8 @@ runs:
         fi
         test -f setup.py && pip install -e ".[dev]"
     - name: Build docs
-        run: nbdev_mkdocs docs
+      shell: bash
+      run: nbdev_mkdocs docs
     - name: Enable GitHub Pages
       shell: python
       run: |
