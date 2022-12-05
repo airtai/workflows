@@ -41,7 +41,8 @@ runs:
           pip install -Uq nbdev
           nbdev_install_quarto
         fi
-        if [[ ${{ github.repository_owner }} != "airtai" ]]; then
+        echo Repository: ${{ github.repository }}
+        if [[ ${{ github.repository }} != "airtai/nbdev-mkdocs" ]]; then
           pip install nbdev-mkdocs
         fi
         test -f setup.py && pip install -e ".[dev]"
