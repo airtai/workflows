@@ -17,12 +17,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.version }}
-        cache: "pip"
-        cache-dependency-path: settings.ini
     - name: Install Dependencies
       env:
         USE_PRE: ${{ inputs.pre }}
