@@ -1,0 +1,20 @@
+name: 'static-check'
+description: 'Run static analysis tools like mypy, bandit, and semgrep on the library'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: 3.x
+    - name: Install Dependencies and library
+        - run: python -m pip install --upgrade pip
+        - run: pip install -U nbdev black
+        - run: test -f setup.py && pip install -e ".[dev]"
+    - name: Run mypy
+        - run: mypy nbdev_mkdocs --ignore-missing-imports
+    - name: Run bandit
+        - run: bandit -r nbdev_mkdocs
+    - name: Run semgrep
+        - run: semgrep --config auto --error nbdev_mkdocs
