@@ -8,13 +8,19 @@ runs:
     - uses: actions/setup-python@v4
       with:
         python-version: 3.x
-    - name: Install Dependencies
+    - name: Install Dependencies and library
       shell: bash
       run: |
         set -ux
         python -m pip install --upgrade pip
         pip install -U nbdev black
         test -f setup.py && pip install -e ".[dev]"
-        mypy nbdev_mkdocs --ignore-missing-imports
-        bandit -r nbdev_mkdocs
-        semgrep --config auto --error nbdev_mkdocs
+    - name: Run mypy
+      shell: bash
+      run: mypy nbdev_mkdocs --ignore-missing-imports
+    - name: Run bandit
+      shell: bash
+      run: bandit -r nbdev_mkdocs
+    - name: Run semgrep
+      shell: bash
+      run: semgrep --config auto --error nbdev_mkdocs
