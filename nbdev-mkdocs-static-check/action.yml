@@ -5,7 +5,7 @@ inputs:
   version:
     description: 'Version of python to set up'
     required: false
-    default: '3.x'
+    default: '3.9'
 
 runs:
   using: "composite"
