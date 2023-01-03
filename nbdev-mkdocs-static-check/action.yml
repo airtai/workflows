@@ -20,7 +20,7 @@ runs:
       run: echo "LIB_PATH=$(grep lib_path settings.ini | awk -F = '{print $2}' | xargs)" >> $GITHUB_ENV
     - name: Run mypy
       shell: bash
-      run: mypy ${{ env.LIB_PATH }} --ignore-missing-imports
+      run: mypy ${{ env.LIB_PATH }}
     - name: Run bandit
       shell: bash
       run: bandit -r ${{ env.LIB_PATH }}
