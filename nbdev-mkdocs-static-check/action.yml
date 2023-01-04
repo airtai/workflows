@@ -1,13 +1,19 @@
 name: 'static-check'
 description: 'Run static analysis tools like mypy, bandit, and semgrep on the library'
 
+inputs:
+  version:
+    description: 'Version of python to set up'
+    required: false
+    default: '3.9'
+
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
-        python-version: 3.x
+        python-version: ${{ inputs.version }}
     - name: Install Dependencies and library
       shell: bash
       run: |
