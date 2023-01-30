@@ -23,6 +23,6 @@ runs:
     - name: Set LIB_PATH env variable
       shell: bash
       run: echo "LIB_PATH=$(grep lib_path settings.ini | awk -F = '{print $2}' | xargs)" >> $GITHUB_ENV
-    - name: Run mypy analysis
+    - name: Run mypy static analysis
       shell: bash
       run: mypy ${{ env.LIB_PATH }}

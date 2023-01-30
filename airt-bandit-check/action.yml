@@ -23,6 +23,6 @@ runs:
     - name: Set LIB_PATH env variable
       shell: bash
       run: echo "LIB_PATH=$(grep lib_path settings.ini | awk -F = '{print $2}' | xargs)" >> $GITHUB_ENV
-    - name: Run bandit analysis
+    - name: Run bandit static analysis
       shell: bash
       run: bandit -r ${{ env.LIB_PATH }}
