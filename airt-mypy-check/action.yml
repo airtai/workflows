@@ -1,0 +1,28 @@
+name: 'mypy-static-analysis'
+description: 'Run mypy static analysis on the library'
+
+inputs:
+  version:
+    description: 'Version of python to set up'
+    required: false
+    default: '3.9'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.version }}
+    - name: Install Dependencies and library
+      shell: bash
+      run: |
+        set -ux
+        python -m pip install --upgrade pip
+        test -f setup.py && pip install -e ".[dev]"
+    - name: Set LIB_PATH env variable
+      shell: bash
+      run: echo "LIB_PATH=$(grep lib_path settings.ini | awk -F = '{print $2}' | xargs)" >> $GITHUB_ENV
+    - name: Run mypy analysis
+      shell: bash
+      run: mypy ${{ env.LIB_PATH }}
