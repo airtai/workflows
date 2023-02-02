@@ -83,6 +83,7 @@ runs:
         git fetch origin gh-pages --depth=1
         git config user.name github-bot
         git config user.email github-bot@@users.noreply.github.com
-        echo mike deploy --config-file mkdocs/mkdocs.yml --update-aliases "$DOC_VERSION_TO_DEPLOY" "$DOC_VERSION_ALIAS"
-        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases "$DOC_VERSION_TO_DEPLOY" "$DOC_VERSION_ALIAS"
-        mike set-default --push --config-file mkdocs/mkdocs.yml "$DOC_DEFAULT_ALIAS"
+        echo mike deploy --config-file mkdocs/mkdocs.yml --update-aliases ${{ inputs.doc_version_to_deploy }} ${{ inputs.doc_version_alias }}
+        echo mike deploy --config-file mkdocs/mkdocs.yml --update-aliases "${{ inputs.doc_version_to_deploy }}" "${{ inputs.doc_version_alias }}"
+        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases ${{ inputs.doc_version_to_deploy }} ${{ inputs.doc_version_alias }}
+        mike set-default --push --config-file mkdocs/mkdocs.yml ${{ inputs.doc_default_alias }}
