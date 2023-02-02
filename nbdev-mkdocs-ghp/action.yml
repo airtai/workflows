@@ -13,6 +13,22 @@ inputs:
     description: 'GitHub token'
     default: ${{ github.token }}
     required: false
+  versioned_doc_deployments:
+    description: 'Deploy multiple versions of your project documentation using mike?'
+    required: false
+    default: ''
+  doc_version_to_deploy:
+    description: 'The documentation version to be deployed'
+    required: false
+    default: ''
+  doc_version_alias:
+    description: 'The alias for tagging the new version of the documentation'
+    required: false
+    default: 'latest'
+  doc_default_alias:
+    description: "The documentation's default version to redirect the users on page load"
+    required: false
+    default: 'latest'
 
 runs:
   using: "composite"
@@ -26,6 +42,9 @@ runs:
     - name: Install Dependencies
       env:
         USE_PRE: ${{ inputs.pre }}
+        DOC_VERSION_TO_DEPLOY: ${{ inputs.doc_version_to_deploy }}
+        DOC_VERSION_ALIAS: ${{ inputs.doc_version_alias }}
+        DOC_DEFAULT_ALIAS: ${{ inputs.doc_default_alias }}
       shell: bash
       run: |
         set -ux
@@ -48,6 +67,7 @@ runs:
         nbdev_docs
         nbdev_mkdocs docs
     - name: Deploy to GitHub Pages
+      if: ${{ inputs.versioned_doc_deployments == ''}}
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.ghtoken }}
@@ -57,4 +77,12 @@ runs:
         # You can swap them out with your own user credentials.
         user_name: github-actions[bot]
         user_email: 41898282+github-actions[bot]@users.noreply.github.com
-
+    - name: Deploy to GitHub Pages using mike
+      if: ${{ inputs.versioned_doc_deployments != ''}}
+      shell: bash
+      run: |
+        git fetch origin gh-pages --depth=1
+        git config user.name github-bot
+        git config user.email github-bot@@users.noreply.github.com
+        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases $DOC_VERSION_TO_DEPLOY $DOC_VERSION_ALIAS
+        mike set-default --push --config-file mkdocs/mkdocs.yml $DOC_DEFAULT_ALIAS
