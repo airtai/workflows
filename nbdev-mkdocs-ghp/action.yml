@@ -20,7 +20,6 @@ inputs:
   doc_version_to_deploy:
     description: 'The documentation version to be deployed'
     required: false
-    default: ''
   doc_version_alias:
     description: 'The alias for tagging the new version of the documentation'
     required: false
@@ -84,5 +83,5 @@ runs:
         git fetch origin gh-pages --depth=1
         git config user.name github-bot
         git config user.email github-bot@@users.noreply.github.com
-        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases $DOC_VERSION_TO_DEPLOY $DOC_VERSION_ALIAS
-        mike set-default --push --config-file mkdocs/mkdocs.yml $DOC_DEFAULT_ALIAS
+        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases "$DOC_VERSION_TO_DEPLOY" "$DOC_VERSION_ALIAS"
+        mike set-default --push --config-file mkdocs/mkdocs.yml "$DOC_DEFAULT_ALIAS"
