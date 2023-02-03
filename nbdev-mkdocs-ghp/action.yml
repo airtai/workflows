@@ -13,13 +13,10 @@ inputs:
     description: 'GitHub token'
     default: ${{ github.token }}
     required: false
-  enable_docs_versioning:
-    description: 'Deploy multiple versions of your project documentation using mike?'
-    required: false
-    default: ''
   doc_deployment_version:
     description: 'The documentation version to be deployed'
     required: false
+    default: ''
   doc_deployment_tag:
     description: 'The alias for tagging the new version of the documentation'
     required: false
@@ -63,7 +60,7 @@ runs:
         nbdev_docs
         nbdev_mkdocs docs
     - name: Deploy to GitHub Pages
-      if: ${{ inputs.enable_docs_versioning == ''}}
+      if: ${{ inputs.doc_deployment_version == ''}}
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.ghtoken }}
@@ -74,7 +71,7 @@ runs:
         user_name: github-actions[bot]
         user_email: 41898282+github-actions[bot]@users.noreply.github.com
     - name: Deploy to GitHub Pages using mike
-      if: ${{ inputs.enable_docs_versioning != ''}}
+      if: ${{ inputs.doc_deployment_version != ''}}
       shell: bash
       run: |
         git fetch origin gh-pages --depth=1
