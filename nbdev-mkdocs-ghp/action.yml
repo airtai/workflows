@@ -78,4 +78,4 @@ runs:
         git config user.name github-bot
         git config user.email github-bot@@users.noreply.github.com
         mike deploy --config-file mkdocs/mkdocs.yml --update-aliases ${{ inputs.doc_deployment_version }} ${{ inputs.doc_deployment_tag }}
-        mike set-default --push --config-file mkdocs/mkdocs.yml ${{ inputs.default_doc_tag }}
+        mike set-default --push --config-file mkdocs/mkdocs.yml ${{ inputs.default_doc_tag }} || mike set-default --push --config-file mkdocs/mkdocs.yml ${{ inputs.doc_deployment_tag }}
