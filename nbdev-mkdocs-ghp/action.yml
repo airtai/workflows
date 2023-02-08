@@ -50,7 +50,7 @@ runs:
     - name: Read docs_versioning value from settings.ini
       shell: bash
       run: |
-        docs_versioning=$(grep docs_versioning settings.ini | awk -F = '{print $2}' | xargs)
+        docs_versioning=$(grep '^docs_versioning[[:space:]]*=' settings.ini | awk -F = '{print $2}' | xargs)
         if ! [[ "$docs_versioning" =~ ^(None|minor|patch|)$ ]]; then
           echo "Error: Invalid value set for 'docs_versioning' in settings.ini file: $docs_versioning. Allowed values are None, minor and patch." >&2
           exit 1
