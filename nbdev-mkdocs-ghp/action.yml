@@ -51,15 +51,11 @@ runs:
       shell: bash
       run: |
         docs_versioning=$( { grep '^docs_versioning[[:space:]]*=' settings.ini || [[ $? == 1 ]]; } | awk -F = '{print $2}' | xargs)
-        echo "docs_versioning=$docs_versioning"
         if ! [[ "$docs_versioning" =~ ^(None|minor|patch|)$ ]]; then
           echo "Error: Invalid value set for 'docs_versioning' in settings.ini file: $docs_versioning. Allowed values are None, minor and patch." >&2
           exit 1
         fi        
         echo "DOCS_VERSIONING=$docs_versioning" >> $GITHUB_ENV
-        echo "env.DOCS_VERSIONING=$DOCS_VERSIONING"
-        echo " ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' }} "
-        echo " ${{ env.DOCS_VERSIONING != '' && env.DOCS_VERSIONING != 'None' }} "
     - name: Deploy to GitHub Pages
       if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' }}
       uses: peaceiris/actions-gh-pages@v3
@@ -78,16 +74,14 @@ runs:
         git fetch origin gh-pages --depth=1
         git config user.name github-bot
         git config user.email github-bot@@users.noreply.github.com
+        
         project_version=$(grep '^version[[:space:]]*=' settings.ini | awk -F = '{print $2}' | xargs)
         doc_deployment_version="$project_version"
         doc_deployment_tag="dev"
-        echo "doc_deployment_version=$doc_deployment_version"
-        echo "doc_deployment_tag=$doc_deployment_tag"
+        
         pat="^[0-9]+([.][0-9]+)*$"
         if [[ $project_version =~ $pat ]]; then
           doc_deployment_tag="latest"
-          echo "DOCS_VERSIONING=$DOCS_VERSIONING"
-          echo "env.DOCS_VERSIONING=$env.DOCS_VERSIONING"
           if [[ $DOCS_VERSIONING == "minor" ]]; then
             doc_deployment_version="$(echo "$project_version" | sed 's/\.[^.]*$//')"
           fi
