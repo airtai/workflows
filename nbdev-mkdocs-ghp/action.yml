@@ -92,5 +92,3 @@ runs:
         fi
         
         echo "mike deploy --config-file mkdocs/mkdocs.yml --update-aliases $doc_deployment_version $doc_deployment_tag"
-        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases ${{ doc_deployment_version }} ${{ doc_deployment_tag }}
-        mike set-default --push --config-file mkdocs/mkdocs.yml latest || mike set-default --push --config-file mkdocs/mkdocs.yml dev
