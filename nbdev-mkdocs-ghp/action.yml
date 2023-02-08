@@ -13,18 +13,6 @@ inputs:
     description: 'GitHub token'
     default: ${{ github.token }}
     required: false
-  doc_deployment_version:
-    description: 'The documentation version to be deployed'
-    required: false
-    default: ''
-  doc_deployment_tag:
-    description: 'The alias for tagging the new version of the documentation'
-    required: false
-    default: 'latest'
-  default_doc_tag:
-    description: "The documentation's default version to redirect the users on page load"
-    required: false
-    default: 'latest'
 
 runs:
   using: "composite"
@@ -59,8 +47,18 @@ runs:
       run: |
         nbdev_docs
         nbdev_mkdocs docs
+    - name: Read docs_versioning value from settings.ini
+      shell: bash
+      run: |
+        docs_versioning=$(grep docs_versioning settings.ini | awk -F = '{print $2}' | xargs)
+        if ! [[ "$docs_versioning" =~ ^(None|minor|patch|)$ ]]; then
+          echo "Error: Invalid value set for 'docs_versioning' in settings.ini file: $docs_versioning. Allowed values are None, minor and patch." >&2
+          exit 1
+        fi        
+        echo "DOCS_VERSIONING=$docs_versioning" >> $GITHUB_ENV
+        echo "DOCS_VERSIONING=$docs_versioning"
     - name: Deploy to GitHub Pages
-      if: ${{ inputs.doc_deployment_version == ''}}
+      if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None'}}
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.ghtoken }}
@@ -71,11 +69,22 @@ runs:
         user_name: github-actions[bot]
         user_email: 41898282+github-actions[bot]@users.noreply.github.com
     - name: Deploy to GitHub Pages using mike
-      if: ${{ inputs.doc_deployment_version != ''}}
+      if: ${{ env.DOCS_VERSIONING != '' || env.DOCS_VERSIONING != 'None' }}
       shell: bash
       run: |
         git fetch origin gh-pages --depth=1
         git config user.name github-bot
         git config user.email github-bot@@users.noreply.github.com
-        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases ${{ inputs.doc_deployment_version }} ${{ inputs.doc_deployment_tag }}
-        mike set-default --push --config-file mkdocs/mkdocs.yml ${{ inputs.default_doc_tag }} || mike set-default --push --config-file mkdocs/mkdocs.yml ${{ inputs.doc_deployment_tag }}
+        project_version=$(grep version settings.ini | awk -F = '{print $2}' | xargs)
+        doc_deployment_version="$project_version"
+        doc_deployment_tag="dev"
+        if [[ $project_version =~ ^[0-9]+([.][0-9]+)*$ ]]; then
+          doc_deployment_tag="latest"
+          if [[ env.DOCS_VERSIONING == "minor" ]]; then
+            doc_deployment_version="$(echo "$project_version" | sed 's/\.[^.]*$//')"
+        fi
+        echo "doc_deployment_version=$doc_deployment_version"
+        echo "doc_deployment_tag=$doc_deployment_tag"
+        
+        mike deploy --config-file mkdocs/mkdocs.yml --update-aliases ${{ doc_deployment_version }} ${{ doc_deployment_tag }}
+        mike set-default --push --config-file mkdocs/mkdocs.yml latest || mike set-default --push --config-file mkdocs/mkdocs.yml dev
