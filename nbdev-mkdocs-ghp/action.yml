@@ -84,7 +84,9 @@ runs:
         pat="^[0-9]+([.][0-9]+)*$"
         if [[ $project_version =~ $pat ]]; then
           doc_deployment_tag="latest"
-          if [[ env.DOCS_VERSIONING == "minor" ]]; then
+          echo "DOCS_VERSIONING=$DOCS_VERSIONING"
+          echo "env.DOCS_VERSIONING=$env.DOCS_VERSIONING"
+          if [[ $DOCS_VERSIONING == "minor" ]]; then
             doc_deployment_version="$(echo "$project_version" | sed 's/\.[^.]*$//')"
           fi
         fi
