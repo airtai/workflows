@@ -86,6 +86,7 @@ runs:
           doc_deployment_tag="latest"
           if [[ env.DOCS_VERSIONING == "minor" ]]; then
             doc_deployment_version="$(echo "$project_version" | sed 's/\.[^.]*$//')"
+          fi
         fi
         echo "doc_deployment_version=$doc_deployment_version"
         echo "doc_deployment_tag=$doc_deployment_tag"
