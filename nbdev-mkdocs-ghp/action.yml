@@ -57,9 +57,9 @@ runs:
           exit 1
         fi        
         echo "DOCS_VERSIONING=$docs_versioning" >> $GITHUB_ENV
-        echo "DOCS_VERSIONING=$docs_versioning"
-        echo " ${{ $docs_versioning == '' || $docs_versioning == 'None' }}"
-        echo " ${{ $docs_versioning != '' && $docs_versioning != 'None' }}"
+        echo "env.DOCS_VERSIONING=$DOCS_VERSIONING"
+        echo " ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' }} "
+        echo " ${{ env.DOCS_VERSIONING != '' && env.DOCS_VERSIONING != 'None' }} "
     - name: Deploy to GitHub Pages
       if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' }}
       uses: peaceiris/actions-gh-pages@v3
