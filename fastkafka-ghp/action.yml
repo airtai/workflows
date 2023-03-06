@@ -50,7 +50,7 @@ runs:
       shell: bash
       run: |
         fastkafka docs install_deps
-        fastkafka docs generate
+        fastkafka docs generate ${{ inputs.app }}
     - name: Read docs_versioning value from settings.ini
       shell: bash
       run: |
