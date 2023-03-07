@@ -22,7 +22,6 @@ runs:
       with:
         python-version: ${{ inputs.version }}
         cache: "pip"
-        cache-dependency-path: settings.ini
     - name: Install Dependencies
       shell: bash
       run: |
