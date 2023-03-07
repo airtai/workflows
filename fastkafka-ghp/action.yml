@@ -46,6 +46,15 @@ runs:
           nbdev_install_quarto
         fi
         test -f setup.py && pip install -e ".[dev]"
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Check npx
+      shell: bash
+      run: |
+        npx --version
+        npx -y -p @asyncapi/generator ag --version
+        npx -y -p @asyncapi/generator ag https://raw.githubusercontent.com/asyncapi/asyncapi/master/examples/simple.yml @asyncapi/html-template -o /tmp/install_check/docs
     - name: Build docs
       shell: bash
       run: |
