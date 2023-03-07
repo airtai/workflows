@@ -1,0 +1,54 @@
+name: 'build-fastkafka-docs'
+description: 'Create docs with fastkafka'
+inputs:
+  version:
+    description: 'Version of python to set up'
+    required: false
+    default: '3.9'
+  ghtoken:
+    description: 'GitHub token'
+    default: ${{ github.token }}
+    required: false
+  app:
+    description: "Input in the form of 'path:app', where 'path' is the path to a python file and 'app' is an object of type 'FastKafka'"
+    default: "fastkafka.application:app"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.version }}
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        set -ux
+        python -m pip install --upgrade pip
+        test -f setup.py && pip install -e "." || echo "setup.py doesn't exists"
+        test -f requirements.txt && pip install -r requirements.txt || echo "requirements.txt doesn't exists"
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Check npx
+      shell: bash
+      run: |
+        npx --version
+        npx -y -p @asyncapi/generator ag --version
+        npx -y -p @asyncapi/generator ag https://raw.githubusercontent.com/asyncapi/asyncapi/master/examples/simple.yml @asyncapi/html-template -o /tmp/install_check/docs
+    - name: Build docs
+      shell: bash
+      run: |
+        fastkafka docs install_deps
+        fastkafka docs generate ${{ inputs.app }}
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ inputs.ghtoken }}
+        force_orphan: true
+        publish_dir: ./asyncapi/docs
+        # The following lines assign commit authorship to the official GH-Actions bot for deploys to `gh-pages` branch.
+        # You can swap them out with your own user credentials.
+        user_name: github-actions[bot]
+        user_email: 41898282+github-actions[bot]@users.noreply.github.com
