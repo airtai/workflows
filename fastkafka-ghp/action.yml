@@ -21,7 +21,6 @@ runs:
     - uses: actions/setup-python@v4
       with:
         python-version: ${{ inputs.version }}
-        cache: "pip"
     - name: Install Dependencies
       shell: bash
       run: |
