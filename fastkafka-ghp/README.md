@@ -37,4 +37,4 @@ Input in the form of `path:app`, where `path` is the path to a python file and `
     app: "test_fastkafka.application:kafka_app"
 ```
 
-In the above example, FastKafka app is named as "kafka_app" and it is available in "application" which is a submodule of "test_fastkafka" module
+In the above example, `FastKafka` app is named as `kafka_app` and it is available in `application` which is a submodule of `test_fastkafka` module.
