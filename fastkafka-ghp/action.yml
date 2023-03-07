@@ -1,10 +1,6 @@
 name: 'build-fastkafka-docs'
-description: 'Create docs with nbdev'
+description: 'Create docs with fastkafka'
 inputs:
-  pre:
-    description: 'Install prerelease nbdev/execnb from master?'
-    required: false
-    default: ''
   version:
     description: 'Version of python to set up'
     required: false
@@ -34,17 +30,6 @@ runs:
       run: |
         set -ux
         python -m pip install --upgrade pip
-        if [ $USE_PRE ]; then
-          pip install -Uq git+https://github.com/fastai/ghapi.git
-          pip install -Uq git+https://github.com/fastai/fastcore.git
-          pip install -Uq git+https://github.com/fastai/execnb.git
-          pip install -Uq git+https://github.com/fastai/nbdev.git
-          wget -q $(curl https://latest.fast.ai/pre/quarto-dev/quarto-cli/linux-amd64.deb)
-          sudo dpkg -i quarto*.deb
-        else
-          pip install -Uq nbdev
-          nbdev_install_quarto
-        fi
         test -f setup.py && pip install -e ".[dev]"
     - uses: actions/setup-node@v3
       with:
