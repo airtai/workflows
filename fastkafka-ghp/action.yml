@@ -27,8 +27,8 @@ runs:
       run: |
         set -ux
         python -m pip install --upgrade pip
-        test -f setup.py && pip install -e "."
-        test -f requirements.txt && pip install -r requirements.txt
+        test -f setup.py && pip install -e "." || echo "setup.py doesn't exists"
+        test -f requirements.txt && pip install -r requirements.txt || echo "requirements.txt doesn't exists"
     - uses: actions/setup-node@v3
       with:
         node-version: 18
