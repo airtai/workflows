@@ -43,9 +43,9 @@ runs:
         fi
         test -f setup.py && pip install -e ".[dev]"
     - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: npm
+      with:
+        node-version: 18
+        cache: npm
     - name: Install docusaurus dependencies
       run: ./docusaurus/scripts/install_docusaurus_deps.sh
     - name: Build docusaurus docs
