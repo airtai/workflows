@@ -47,6 +47,7 @@ runs:
         node-version: 18
         cache: npm
     - name: Install docusaurus dependencies
+      shell: bash
       run: ./docusaurus/scripts/install_docusaurus_deps.sh
     - name: Build docusaurus docs
       shell: bash
