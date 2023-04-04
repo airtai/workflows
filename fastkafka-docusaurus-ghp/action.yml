@@ -23,7 +23,7 @@ runs:
         python-version: ${{ inputs.version }}
         cache: "pip"
         cache-dependency-path: settings.ini
-    - name: Install Dependencies
+    - name: Install nbdev-mkdocs Dependencies
       env:
         USE_PRE: ${{ inputs.pre }}
       shell: bash
@@ -42,13 +42,15 @@ runs:
           nbdev_install_quarto
         fi
         test -f setup.py && pip install -e ".[dev]"
-        ./docusaurus/scripts/install_docusaurus_deps.sh
-
+    - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+    - name: Install docusaurus dependencies
+      run: ./docusaurus/scripts/install_docusaurus_deps.sh
     - name: Build docusaurus docs
       shell: bash
-      run: |
-        ./docusaurus/scripts/build_docusaurus_docs.sh
-
+      run: ./docusaurus/scripts/build_docusaurus_docs.sh
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
