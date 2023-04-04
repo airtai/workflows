@@ -46,6 +46,7 @@ runs:
       with:
         node-version: 18
         cache: npm
+        cache-dependency-path: docusaurus/package-lock.json
     - name: Install docusaurus dependencies
       shell: bash
       run: ./docusaurus/scripts/install_docusaurus_deps.sh
