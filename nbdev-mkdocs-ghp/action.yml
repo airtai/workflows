@@ -77,7 +77,7 @@ runs:
         echo "::notice::${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' || env.IS_GH_PAGES_EXISTS == false }}" 
 
     - name: Deploy to GitHub Pages
-      if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' || env.IS_GH_PAGES_EXISTS == false }}
+      if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' || env.IS_GH_PAGES_EXISTS == 'false' }}
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.ghtoken }}
