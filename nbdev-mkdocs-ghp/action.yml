@@ -70,6 +70,12 @@ runs:
             fi
         done
         echo "IS_GH_PAGES_EXISTS=$is_gh_pages_exists" >> $GITHUB_ENV
+        
+    - name: echo
+      shell: bash
+      run: |
+        echo "::notice::env.IS_GH_PAGES_EXISTS: ${{ env.IS_GH_PAGES_EXISTS }}" 
+
     - name: Deploy to GitHub Pages
       if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' || env.IS_GH_PAGES_EXISTS == false }}
       uses: peaceiris/actions-gh-pages@v3
