@@ -56,8 +56,22 @@ runs:
           exit 1
         fi        
         echo "DOCS_VERSIONING=$docs_versioning" >> $GITHUB_ENV
+    - name: Check if gh-pages branch exists in origin
+      shell: bash
+      run: |
+        remote_branches=$(git ls-remote --heads origin | awk '{print $2}')
+        target_branch="refs/heads/gh-pages"
+        is_gh_pages_exists=false
+        for branch in $remote_branches
+        do
+            if [ "$branch" == "$target_branch" ] 
+                then
+                    is_gh_pages_exists=true
+            fi
+        done
+        echo "IS_GH_PAGES_EXISTS=$is_gh_pages_exists" >> $GITHUB_ENV
     - name: Deploy to GitHub Pages
-      if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' }}
+      if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' || env.IS_GH_PAGES_EXISTS == 'false' }}
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.ghtoken }}
