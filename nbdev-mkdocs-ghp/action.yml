@@ -62,6 +62,7 @@ runs:
       run: |
         git ls-remote --exit-code --heads origin 'gh-pages' >/dev/null 2>&1
         exit_code=$?
+        echo "Testing echo statement"
         if [[ $exit_code == '0' ]]; then
           echo "Git branch 'gh-pages' exists in the remote repository"
         elif [[ $exit_code == '2' ]]; then
