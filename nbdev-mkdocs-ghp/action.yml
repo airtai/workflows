@@ -61,7 +61,16 @@ runs:
       id: check_gh_pages
       shell: bash
       run: |
+        echo "::notice::Checking if gh-pages branch exists in origin"
         git fetch origin gh-pages --depth=1
+    - name: Echo gh-pages branch status
+      shell: bash
+      run: |
+        if [[ ${{ steps.check_gh_pages.outcome == 'success' }} ]]; then
+          echo "::notice::'gh-pages' branch exists in the remote repository."
+        elif [[ ${{ steps.check_gh_pages.outcome == 'failure' }} ]]; then
+          echo "::notice::Creating 'gh-pages' branch in the origin repository as it does not exist."
+        fi
     - name: Deploy to GitHub Pages
       if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' || steps.check_gh_pages.outcome == 'failure' }}
       uses: peaceiris/actions-gh-pages@v3
