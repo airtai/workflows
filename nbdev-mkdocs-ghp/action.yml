@@ -1,16 +1,16 @@
-name: 'build-docs'
-description: 'Create docs with nbdev'
+name: "build-docs"
+description: "Create docs with nbdev"
 inputs:
   pre:
-    description: 'Install prerelease nbdev/execnb from master?'
+    description: "Install prerelease nbdev/execnb from master?"
     required: false
-    default: ''
+    default: ""
   version:
-    description: 'Version of python to set up'
+    description: "Version of python to set up"
     required: false
-    default: '3.9'
+    default: "3.9"
   ghtoken:
-    description: 'GitHub token'
+    description: "GitHub token"
     default: ${{ github.token }}
     required: false
 
@@ -56,8 +56,13 @@ runs:
           exit 1
         fi        
         echo "DOCS_VERSIONING=$docs_versioning" >> $GITHUB_ENV
+    - name: Check if gh-pages branch exists in origin
+      shell: bash
+      run: |
+        git ls-remote --exit-code --heads origin 'gh-pages' >/dev/null 2>&1
+        echo "GH_PAGES_ERROR_CODE=$?" >> $GITHUB_ENV
     - name: Deploy to GitHub Pages
-      if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' }}
+      if: ${{ env.DOCS_VERSIONING == '' || env.DOCS_VERSIONING == 'None' || env.GH_PAGES_ERROR_CODE == '2'}}
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ inputs.ghtoken }}
@@ -74,11 +79,11 @@ runs:
         git fetch origin gh-pages --depth=1
         git config user.name github-bot
         git config user.email github-bot@@users.noreply.github.com
-        
+
         project_version=$(grep '^version[[:space:]]*=' settings.ini | awk -F = '{print $2}' | xargs)
         doc_deployment_version="$project_version"
         doc_deployment_tag="dev"
-        
+
         pat="^[0-9]+([.][0-9]+)*$"
         if [[ $project_version =~ $pat ]]; then
           doc_deployment_tag="latest"
@@ -86,7 +91,7 @@ runs:
             doc_deployment_version="$(echo "$project_version" | sed 's/\.[^.]*$//')"
           fi
         fi
-        
+
         echo "mike deploy --config-file mkdocs/mkdocs.yml --update-aliases $doc_deployment_version $doc_deployment_tag"
         mike deploy --config-file mkdocs/mkdocs.yml --update-aliases $doc_deployment_version $doc_deployment_tag
         mike set-default --push --config-file mkdocs/mkdocs.yml latest || mike set-default --push --config-file mkdocs/mkdocs.yml dev
