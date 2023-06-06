@@ -66,9 +66,9 @@ runs:
     - name: Echo gh-pages branch status
       shell: bash
       run: |
-        if [[ ${{ steps.check_gh_pages.outcome == 'success' }} ]]; then
+        if ${{ steps.check_gh_pages.outcome == 'success' }}; then
           echo "::notice::'gh-pages' branch exists in the remote repository."
-        elif [[ ${{ steps.check_gh_pages.outcome == 'failure' }} ]]; then
+        elif ${{ steps.check_gh_pages.outcome == 'failure' }}; then
           echo "::notice::Creating 'gh-pages' branch in the origin repository as it does not exist."
         fi
     - name: Deploy to GitHub Pages
