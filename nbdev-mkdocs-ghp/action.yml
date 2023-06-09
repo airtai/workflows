@@ -45,7 +45,7 @@ runs:
     - name: Build docs
       shell: bash
       run: |
-        nbdev_docs
+        # nbdev_docs # commented out by Davor
         nbdev_mkdocs docs
     - name: Read docs_versioning value from settings.ini
       shell: bash
