@@ -107,9 +107,8 @@ runs:
         
         site_dir=$(grep '^site_dir[[:space:]]*:' mkdocs/mkdocs.yml | awk -F ':' '{print $2}' | xargs)
         og_tags_to_add=$(grep -E '<meta property="og:|<meta name="twitter:' "mkdocs/$site_dir/index.html")
-        original_branch=$(git rev-parse --abbrev-ref HEAD)
+        
         git checkout gh-pages
-
         destination_html_file="index.html"
         destination_html=$(cat "$destination_html_file")
         modified_destination_html=${destination_html/\<\/head\>/"$og_tags_to_add"$'\n'\<\/head\>}
@@ -118,4 +117,3 @@ runs:
         git add "$destination_html_file"
         git commit -m "Add og meta tags in index.html"
         git push -u origin gh-pages
-        git checkout "$original_branch"
