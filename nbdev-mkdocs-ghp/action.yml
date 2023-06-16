@@ -103,7 +103,8 @@ runs:
 
         echo "mike deploy --config-file mkdocs/mkdocs.yml --update-aliases $doc_deployment_version $doc_deployment_tag"
         mike deploy --config-file mkdocs/mkdocs.yml --update-aliases $doc_deployment_version $doc_deployment_tag
-
+        mike set-default --config-file mkdocs/mkdocs.yml latest || mike set-default --config-file mkdocs/mkdocs.yml dev
+        
         site_dir=$(grep '^site_dir[[:space:]]*:' mkdocs/mkdocs.yml | awk -F ':' '{print $2}' | xargs)
         og_tags_to_add=$(grep -E '<meta property="og:|<meta name="twitter:' "mkdocs/$site_dir/index.html")
         original_branch=$(git rev-parse --abbrev-ref HEAD)
@@ -116,6 +117,5 @@ runs:
 
         git add "$destination_html_file"
         git commit -m "Add og meta tags in index.html"
+        git push
         git checkout "$original_branch"
-
-        mike set-default --push --config-file mkdocs/mkdocs.yml latest || mike set-default --push --config-file mkdocs/mkdocs.yml dev
