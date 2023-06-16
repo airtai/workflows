@@ -117,5 +117,7 @@ runs:
 
         git add "$destination_html_file"
         git commit -m "Add og meta tags in index.html"
-        git push
-        git checkout "$original_branch"
+      uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
